@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en-IN" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Voice-first reader, form helper and place notes for blind and low-vision people. English, Tamil and Hindi." />
+  <title>Cantina Cuhh</title>
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <!-- Screen reader announcements. Polite for normal speech, assertive for errors. -->
+  <div id="live-polite" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="live-assertive" class="sr-only" role="alert" aria-atomic="true"></div>
+
+  <!-- Start screen: browsers need one tap or key press before they allow sound. -->
+  <button id="start" class="start" type="button" data-i18n="tapToStart">Tap anywhere, or press any key, to start.</button>
+
+  <header class="bar" hidden id="topbar">
+    <p class="app-name" data-i18n="appName">Cantina Cuhh</p>
+    <p class="state" id="state" role="status" aria-live="off"><span class="state-dot" aria-hidden="true"></span><span id="state-text" data-i18n="stateIdle">Ready</span></p>
+    <button type="button" class="small" id="btn-settings" data-cmd="settings" data-i18n="lblSettings">Settings</button>
+  </header>
+
+  <main id="main" hidden>
+    <!-- Big talk/stop control. Most of the screen is a tap target. -->
+    <button id="talk" class="talk" type="button" aria-describedby="caption-hint">
+      <span id="talk-label" data-i18n="lblTalk">Talk</span>
+    </button>
+    <p id="caption-hint" class="hint" data-i18n="tapToTalk">Tap anywhere to talk or to stop me.</p>
+
+    <!-- What the app last said, for low-vision users. Hidden from screen readers to avoid double reading (the live region already announces it). -->
+    <p id="caption" class="caption" aria-hidden="true"></p>
+    <p id="heard" class="heard" aria-live="off"></p>
+
+    <!-- Consent and confirmation prompts. -->
+    <div id="prompt-consent" class="prompt" hidden role="group" aria-labelledby="consent-text">
+      <p id="consent-text" data-i18n="micConsent"></p>
+      <button type="button" id="btn-allow" class="primary" data-i18n="lblAllow">Allow microphone</button>
+      <button type="button" id="btn-notnow" data-i18n="lblNotNow">Not now</button>
+    </div>
+    <div id="prompt-confirm" class="prompt" hidden role="group" aria-labelledby="confirm-text">
+      <p id="confirm-text"></p>
+      <button type="button" id="btn-yes" class="primary" data-i18n="lblYes">Yes</button>
+      <button type="button" id="btn-no" data-i18n="lblNo">No</button>
+    </div>
+    <div id="prompt-language" class="prompt" hidden role="group" aria-labelledby="language-text">
+      <p id="language-text" data-i18n="chooseLanguage"></p>
+      <button type="button" data-lang="en" lang="en">English</button>
+      <button type="button" data-lang="ta" lang="ta">தமிழ் (Tamil)</button>
+      <button type="button" data-lang="hi" lang="hi">हिन्दी (Hindi)</button>
+    </div>
+
+    <!-- Screens -->
+    <section id="screen-home" class="screen" aria-labelledby="h-home">
+      <h1 id="h-home" tabindex="-1" data-i18n="lblHome">Home</h1>
+      <nav aria-label="Main tasks" class="grid">
+        <button type="button" class="task" data-cmd="read" data-i18n="lblRead">Read this</button>
+        <button type="button" class="task" data-cmd="form" data-i18n="lblForm">Fill a form</button>
+        <button type="button" class="task" data-cmd="places" data-i18n="lblPlaces">Places near me</button>
+      </nav>
+    </section>
+
+    <section id="screen-reader" class="screen" hidden aria-labelledby="h-reader">
+      <h1 id="h-reader" tabindex="-1" data-i18n="lblRead">Read this</h1>
+      <p data-i18n="readerSoon"></p>
+    </section>
+
+    <section id="screen-form" class="screen" hidden aria-labelledby="h-form">
+      <h1 id="h-form" tabindex="-1" data-i18n="lblForm">Fill a form</h1>
+      <p data-i18n="formSoon"></p>
+    </section>
+
+    <section id="screen-places" class="screen" hidden aria-labelledby="h-places">
+      <h1 id="h-places" tabindex="-1" data-i18n="lblPlaces">Places near me</h1>
+      <p data-i18n="placesSoon"></p>
+    </section>
+
+    <section id="screen-settings" class="screen" hidden aria-labelledby="h-settings">
+      <h1 id="h-settings" tabindex="-1" data-i18n="lblSettings">Settings</h1>
+      <form id="settings-form" class="settings" onsubmit="return false">
+        <label for="set-lang" data-i18n="lblLanguage">Change language</label>
+        <select id="set-lang">
+          <option value="en" lang="en">English</option>
+          <option value="ta" lang="ta">தமிழ் (Tamil)</option>
+          <option value="hi" lang="hi">हिन्दी (Hindi)</option>
+        </select>
+
+        <label for="set-rate"><span data-i18n="lblRate">Speech speed</span>: <output id="out-rate" for="set-rate"></output></label>
+        <input id="set-rate" type="range" min="0.5" max="2" step="0.1" />
+
+        <label for="set-volume"><span data-i18n="lblVolume">Speech volume</span>: <output id="out-volume" for="set-volume"></output></label>
+        <input id="set-volume" type="range" min="0.2" max="1" step="0.1" />
+
+        <label for="set-theme" data-i18n="lblTheme">Colour theme</label>
+        <select id="set-theme">
+          <option value="dark" data-i18n="lblThemeDark">High contrast dark</option>
+          <option value="light" data-i18n="lblThemeLight">High contrast light</option>
+        </select>
+
+        <div class="check"><input id="set-autolisten" type="checkbox" /><label for="set-autolisten" data-i18n="lblAutoListen"></label></div>
+        <div class="check"><input id="set-bargein" type="checkbox" /><label for="set-bargein" data-i18n="lblBargeIn"></label></div>
+        <div class="check"><input id="set-sr" type="checkbox" /><label for="set-sr" data-i18n="lblScreenReader"></label></div>
+        <div class="check"><input id="set-dev" type="checkbox" /><label for="set-dev" data-i18n="lblDevPanel"></label></div>
+      </form>
+    </section>
+
+    <!-- Every voice command also has a button, so nothing depends on speech alone. -->
+    <nav aria-label="Voice commands" class="grid commands">
+      <button type="button" data-cmd="repeat" data-i18n="lblRepeat">Repeat</button>
+      <button type="button" data-cmd="help" data-i18n="lblHelp">Help</button>
+      <button type="button" data-cmd="slower" data-i18n="lblSlower">Slower</button>
+      <button type="button" data-cmd="faster" data-i18n="lblFaster">Faster</button>
+      <button type="button" data-cmd="quieter" data-i18n="lblQuieter">Quieter</button>
+      <button type="button" data-cmd="louder" data-i18n="lblLouder">Louder</button>
+      <button type="button" data-cmd="language" data-i18n="lblLanguage">Change language</button>
+      <button type="button" data-cmd="home" data-i18n="lblHome">Go home</button>
+      <button type="button" data-cmd="clear" class="danger" data-i18n="lblClear">Clear everything</button>
+    </nav>
+
+    <!-- Typed or dictated commands: the fallback where speech recognition is missing (e.g. iOS Safari). -->
+    <form id="command-form" class="command-form">
+      <label for="command-input" data-i18n="lblCommandBox">Type or dictate a command</label>
+      <div class="row">
+        <input id="command-input" type="text" autocomplete="off" enterkeyhint="send" />
+        <button type="submit" data-i18n="lblSend">Send</button>
+      </div>
+    </form>
+  </main>
+
+  <aside id="devpanel" class="devpanel" hidden aria-label="Developer panel"></aside>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
