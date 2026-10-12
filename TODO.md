@@ -13,7 +13,7 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 - [ ] Owner confirms `npm run dev` starts in a fresh terminal (new terminals pick up the PATH change)
 - [x] Local HTTPS for phone testing via `@vitejs/plugin-basic-ssl` (self-signed; untested on a phone)
 - [x] Bundle history merged into `main` (normal folder layout), bundle file removed, stray empty `Hackathon-1-/` clone git-ignored
-- [ ] Confirm push to GitHub works (or hand over manual push commands)
+- [ ] Confirm push to GitHub works — **BLOCKED:** git on this PC has no GitHub login (`could not read Username`); owner runs the push commands once
 
 ## Secrets/.env
 - [x] `.env.example` with placeholders only (AI_PROVIDER, GEMINI_API_KEY, GEMINI_MODEL, ANTHROPIC_API_KEY, ANTHROPIC_MODEL, PORT, MAX_IMAGE_MB)
@@ -131,4 +131,4 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 - Tamil/Hindi voice output depends on the voices installed on the device.
 - npm 11 skips esbuild's postinstall script (allowScripts); Vite still builds fine because the platform binary ships as an optional dependency.
 - Claude refusal fallbacks (`fallbacks` beta) are not enabled, because the model is chosen by env and the parameter is rejected on some models. A refusal is reported to the user as "could not read this".
-- **BLOCKED (push):** the cloud workspace's GitHub token is invalid, so pushing goes through the owner's machine (see manual commands).
+- **BLOCKED (push):** git on the owner's PC has no GitHub credentials yet; owner signs in once (Git Credential Manager) and pushes.
