@@ -9,15 +9,17 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 - [x] `TODO.md` created and committed first
 - [x] Project scaffold: Vite client (vanilla JS) + Express server + `ai/` folder
 - [x] npm scripts: `dev` (client + server together), `build`, `start`
-- [ ] Owner installs Node.js 22 LTS, runs `npm install` + `npm run dev` and confirms it starts (owner action) — **BLOCKED:** npm not installed on owner's PC yet
+- [x] Node.js 24 LTS installed per-user (no admin) at `%LOCALAPPDATA%/Programs/node-v24.20.0-win-x64`, added to user PATH; `npm install`, `npm test`, `npm run build` all pass
+- [ ] Owner confirms `npm run dev` starts in a fresh terminal (new terminals pick up the PATH change)
 - [x] Local HTTPS for phone testing via `@vitejs/plugin-basic-ssl` (self-signed; untested on a phone)
-- [ ] Confirm push to GitHub works (or hand over manual push commands) — first bundle had no HEAD; fixed bundle delivered
+- [x] Bundle history merged into `main` (normal folder layout), bundle file removed, stray empty `Hackathon-1-/` clone git-ignored
+- [ ] Confirm push to GitHub works (or hand over manual push commands)
 
 ## Secrets/.env
 - [x] `.env.example` with placeholders only (AI_PROVIDER, GEMINI_API_KEY, GEMINI_MODEL, ANTHROPIC_API_KEY, ANTHROPIC_MODEL, PORT, MAX_IMAGE_MB)
-- [ ] `ai/provider.js` abstraction (Gemini | Anthropic chosen by AI_PROVIDER; model names from env only)
-- [ ] Look up current model names and request formats in the provider docs (no guessing)
-- [ ] Server refuses to start AI routes with a clear message if key/model is missing (never prints the key)
+- [x] `ai/provider.js` abstraction: `generateJSON()` for Gemini (REST generateContent) or Claude (official SDK, structured outputs), chosen by AI_PROVIDER; model names from env only; errors are short codes, never raw provider text
+- [x] Checked current docs (Oct 2026) for model names and request formats; suggestions noted in `.env.example` comments only
+- [x] AI calls fail fast with `not_configured` if key/model is missing; startup log says which var is missing, never its value (unit-tested)
 - [x] Image size limit (MAX_IMAGE_MB) + basic rate limiting on the proxy (20 req/min on /api/ai)
 - [ ] `git status` check before every commit — `.env` never staged
 - [ ] Owner puts the real key in local `.env` (owner action)
@@ -127,5 +129,6 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 - Browsers block audio until the first user gesture, so the welcome plays after the first tap or key press.
 - Web Speech recognition in Chrome sends audio to Google's servers; not available offline. Disclose in README.
 - Tamil/Hindi voice output depends on the voices installed on the device.
-- **BLOCKED (install/test):** the cloud workspace cannot reach the npm registry, so `npm install`, `vite build` and the Express server can only be run on the owner's machine. Pure-JS logic is tested here with plain Node; UI tested in headless Chromium without Vite.
+- npm 11 skips esbuild's postinstall script (allowScripts); Vite still builds fine because the platform binary ships as an optional dependency.
+- Claude refusal fallbacks (`fallbacks` beta) are not enabled, because the model is chosen by env and the parameter is rejected on some models. A refusal is reported to the user as "could not read this".
 - **BLOCKED (push):** the cloud workspace's GitHub token is invalid, so pushing goes through the owner's machine (see manual commands).
