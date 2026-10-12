@@ -9,9 +9,9 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 - [x] `TODO.md` created and committed first
 - [x] Project scaffold: Vite client (vanilla JS) + Express server + `ai/` folder
 - [x] npm scripts: `dev` (client + server together), `build`, `start`
-- [ ] Owner runs `npm install` + `npm run dev` locally and confirms it starts (owner action)
+- [ ] Owner installs Node.js 22 LTS, runs `npm install` + `npm run dev` and confirms it starts (owner action) — **BLOCKED:** npm not installed on owner's PC yet
 - [x] Local HTTPS for phone testing via `@vitejs/plugin-basic-ssl` (self-signed; untested on a phone)
-- [ ] Confirm push to GitHub works (or hand over manual push commands)
+- [ ] Confirm push to GitHub works (or hand over manual push commands) — first bundle had no HEAD; fixed bundle delivered
 
 ## Secrets/.env
 - [x] `.env.example` with placeholders only (AI_PROVIDER, GEMINI_API_KEY, GEMINI_MODEL, ANTHROPIC_API_KEY, ANTHROPIC_MODEL, PORT, MAX_IMAGE_MB)
@@ -23,19 +23,25 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 - [ ] Owner puts the real key in local `.env` (owner action)
 
 ## Module 1 — Voice home and navigation
-- [ ] Spoken welcome + command list on load (needs one tap first because browsers block autoplay audio)
-- [ ] Commands: read this, fill a form, places near me, repeat, stop, slower, faster, help, change language, go home, clear everything
-- [ ] Command matching in English, Tamil, Hindi (synonyms + fuzzy match)
-- [ ] Audio cues (Web Audio tones): listening, thinking, done, error
-- [ ] "Thinking" heartbeat cue so silence never exceeds ~2 s
-- [ ] Spoken confirmation after every action
-- [ ] Interrupt speech by "stop" or tapping anywhere
-- [ ] Adjustable speech rate and volume (persisted locally as a setting, not content)
-- [ ] Language switch en-IN / ta-IN / hi-IN, with UI strings translated
-- [ ] Warn when the device has no voice installed for the chosen language
-- [ ] SpeechRecognition unsupported (iOS Safari) → announce + big tap-anywhere controls + device keyboard dictation field
-- [ ] Semantic HTML, ARIA labels, live regions, logical focus order, 48px+ targets, high contrast, keyboard operable
-- [ ] Done check: whole home flow with eyes closed
+- [x] Spoken welcome + command list on load (needs one tap first because browsers block autoplay audio)
+- [x] Commands: read this, fill a form, places near me, repeat, stop, slower, faster, help, change language, go home, clear everything
+- [x] Command matching in English, Tamil, Hindi (synonyms + fuzzy match)
+- [x] Audio cues (Web Audio tones): listening, thinking, done, error
+- [x] Heartbeat cue while listening (every 2 s) and helper for thinking (used from Module 2)
+- [x] Spoken confirmation after every action
+- [x] Interrupt speech by "stop" or tapping anywhere
+- [x] Adjustable speech rate and volume (persisted locally as a setting, not content)
+- [x] Language switch en-IN / ta-IN / hi-IN, with UI strings translated
+- [x] Warn when the device has no voice installed for the chosen language
+- [x] SpeechRecognition unsupported (iOS Safari) → announce + big tap-anywhere controls + device keyboard dictation field
+- [x] Semantic HTML, ARIA labels, live regions, logical focus order, 48px+ targets, high contrast, keyboard operable (built; not yet tested with a real screen reader)
+- [x] Screen-reader mode setting (app voice off, live regions only) so TalkBack/VoiceOver don't talk over the app
+- [x] Every voice command also has a button and a typed/dictated command box
+- [x] Unit tests for command matching (`npm test`, 9 passing) + headless browser run with mocked speech
+- [ ] Settings checkboxes are 32px (label row is 48px) — consider bigger
+- [ ] Barge-in ("stop" while speaking) is off by default on phones; test on a real Android phone
+- [ ] Done check: whole home flow with eyes closed (owner, on a real phone)
+- [ ] Tamil and Hindi strings reviewed by a native speaker
 
 ## Module 2 — Camera reader with spoken guidance
 - [ ] Rear camera via getUserMedia, spoken consent first
@@ -74,11 +80,11 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 ## Privacy/Safety
 - [ ] No photos, documents, form answers or transcripts stored by default (memory only)
 - [ ] Server: no request-body logging, no content in error logs
-- [ ] Spoken consent before camera, mic and location, with one-sentence reason
-- [ ] "Clear everything" wipes in-memory state, settings and dev-panel data
-- [ ] Spoken errors with next step: offline, permission denied, API failure, rate limited, image too large
-- [ ] Service worker: home + help work offline; features say when they need internet
-- [ ] Dev panel (off by default, localStorage only): task times + misread counts, no content
+- [ ] Spoken consent before camera, mic ✔ and location, with one-sentence reason
+- [x] "Clear everything" wipes in-memory state, settings and dev-panel data
+- [ ] Spoken errors with next step: offline ✔, mic denied ✔, API failure, rate limited, image too large (Module 2)
+- [x] Service worker: home + help work offline; features say when they need internet (built; offline test on a phone pending)
+- [x] Dev panel (off by default, localStorage only): task times + misread counts, no content
 
 ## Accessibility testing
 - [ ] `docs/ACCESSIBILITY_TEST.md` checklist (tested vs not yet)
