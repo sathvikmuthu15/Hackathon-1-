@@ -7,9 +7,10 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 - [x] Clone repo (was empty)
 - [x] `.gitignore` written before first commit (includes `.env`)
 - [x] `TODO.md` created and committed first
-- [ ] Project scaffold: Vite client (vanilla JS) + Express server + `ai/` folder
-- [ ] npm scripts: `dev` (client + server together), `build`, `start`
-- [ ] Local HTTPS for phone testing (camera/mic need a secure context)
+- [x] Project scaffold: Vite client (vanilla JS) + Express server + `ai/` folder
+- [x] npm scripts: `dev` (client + server together), `build`, `start`
+- [ ] Owner runs `npm install` + `npm run dev` locally and confirms it starts (owner action)
+- [x] Local HTTPS for phone testing via `@vitejs/plugin-basic-ssl` (self-signed; untested on a phone)
 - [ ] Confirm push to GitHub works (or hand over manual push commands)
 
 ## Secrets/.env
@@ -17,7 +18,7 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 - [ ] `ai/provider.js` abstraction (Gemini | Anthropic chosen by AI_PROVIDER; model names from env only)
 - [ ] Look up current model names and request formats in the provider docs (no guessing)
 - [ ] Server refuses to start AI routes with a clear message if key/model is missing (never prints the key)
-- [ ] Image size limit (MAX_IMAGE_MB) + basic rate limiting on the proxy
+- [x] Image size limit (MAX_IMAGE_MB) + basic rate limiting on the proxy (20 req/min on /api/ai)
 - [ ] `git status` check before every commit — `.env` never staged
 - [ ] Owner puts the real key in local `.env` (owner action)
 
@@ -120,4 +121,5 @@ Theme: *Software Solutions for the Specially Abled*. A voice-first PWA that help
 - Browsers block audio until the first user gesture, so the welcome plays after the first tap or key press.
 - Web Speech recognition in Chrome sends audio to Google's servers; not available offline. Disclose in README.
 - Tamil/Hindi voice output depends on the voices installed on the device.
+- **BLOCKED (install/test):** the cloud workspace cannot reach the npm registry, so `npm install`, `vite build` and the Express server can only be run on the owner's machine. Pure-JS logic is tested here with plain Node; UI tested in headless Chromium without Vite.
 - **BLOCKED (push):** the cloud workspace's GitHub token is invalid, so pushing goes through the owner's machine (see manual commands).
